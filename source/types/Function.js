@@ -3,7 +3,7 @@ import { getClassName } from '@actualwave/get-class';
 import {
   MAX_FUNC_STR_LEN,
   setCustomClassNameTo,
-  createComplexDataStorage,
+  createStorage,
   addToStorage,
 } from '../utils';
 
@@ -25,7 +25,7 @@ export default (value) => {
     );
   }
 
-  const result = createComplexDataStorage();
+  const result = createStorage();
   addToStorage(result, 'content', content);
 
   setCustomClassNameTo(

@@ -1,9 +1,13 @@
 import { getClassName } from '@actualwave/get-class';
 
-import { setCustomClassNameTo } from '../utils';
+import { setCustomClassNameTo, createList, addToList } from '../utils';
 
 export default (value, convertValue) => {
-  const result = value.map(convertValue);
+  const result = createList();
+
+  value.forEach((item, index) => {
+    addToList(result, index, convertValue(item));
+  });
 
   setCustomClassNameTo(result, getClassName(value));
 

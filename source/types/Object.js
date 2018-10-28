@@ -2,13 +2,13 @@ import { getClassName } from '@actualwave/get-class';
 
 import {
   setCustomClassNameTo,
-  createComplexDataStorage,
+  createStorage,
   addToStorage,
   keyNeedsConversion,
 } from '../utils';
 
 export default (value, convertValue) => {
-  const result = createComplexDataStorage();
+  const result = createStorage();
 
   Object.keys(value).forEach((key) => {
     addToStorage(

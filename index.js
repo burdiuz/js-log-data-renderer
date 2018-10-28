@@ -10,8 +10,7 @@ var closureValue = require('@actualwave/closure-value');
 
 // Assigned to an object, when rendering, if exists, will wrap content, like
 // Map{...} or Set[...]
-const CLASS_NAME_KEY = '@class-name';
-const SPACE_LEVEL = '  ';
+const CLASS_NAME_KEY = 'className';
 const MAX_FUNC_STR_LEN = 30;
 const setCustomClassNameTo = (data, className) => data[CLASS_NAME_KEY] = className;
 const getCustomClassNameFrom = data => data[CLASS_NAME_KEY] || '';
@@ -37,16 +36,47 @@ const getStringWrap = value => {
 const canPassAsIs = value => typeof value === 'string';
 const validKeyRgx = /^[\w_$][\w\d_$]*$/i;
 const keyNeedsConversion = key => !(canPassAsIs(key) && validKeyRgx.test(key));
-const isNested = value => typeof value === 'object';
-const createComplexDataStorage = () => new Map();
-const isStorage = storage => storage instanceof Map;
-const addToStorage = (storage, key, value) => storage.set(key, value);
-const iterateStorage = (storage, handler) => storage.forEach(handler);
-const getStorageSize = storage => storage.size;
+const isNested = value => value && typeof value === 'object';
+const isList = target => isNested(target) && target.type === 'list';
+const createList = () => ({
+  type: 'list',
+  values: []
+});
+const addToList = ({
+  values
+}, index, value) => values[index] = value;
+const iterateList = ({
+  values
+}, handler) => values.forEach((value, index) => handler(value, index));
+const getListSize = ({
+  values
+}) => values.length;
+const isStorage = target => isNested(value) && target.type === 'storage';
+const createStorage = () => ({
+  type: 'storage',
+  keys: [],
+  values: []
+});
+const addToStorage = ({
+  keys,
+  values
+}, key, value) => {
+  keys.push(key);
+  values.push(value);
+};
+const iterateStorage = (storage, handler) => {
+  const {
+    keys,
+    values
+  } = storage;
+  keys.forEach((key, index) => handler(values[index], key));
+};
+const getStorageSize = ({
+  keys
+}) => keys.length;
 
 var utils = /*#__PURE__*/Object.freeze({
   CLASS_NAME_KEY: CLASS_NAME_KEY,
-  SPACE_LEVEL: SPACE_LEVEL,
   MAX_FUNC_STR_LEN: MAX_FUNC_STR_LEN,
   setCustomClassNameTo: setCustomClassNameTo,
   getCustomClassNameFrom: getCustomClassNameFrom,
@@ -54,15 +84,23 @@ var utils = /*#__PURE__*/Object.freeze({
   canPassAsIs: canPassAsIs,
   keyNeedsConversion: keyNeedsConversion,
   isNested: isNested,
-  createComplexDataStorage: createComplexDataStorage,
+  isList: isList,
+  createList: createList,
+  addToList: addToList,
+  iterateList: iterateList,
+  getListSize: getListSize,
   isStorage: isStorage,
+  createStorage: createStorage,
   addToStorage: addToStorage,
   iterateStorage: iterateStorage,
   getStorageSize: getStorageSize
 });
 
 var convertArray = ((value, convertValue) => {
-  const result = value.map(convertValue);
+  const result = createList();
+  value.forEach((item, index) => {
+    addToList(result, index, convertValue(item));
+  });
   setCustomClassNameTo(result, getClass.getClassName(value));
   return result;
 });
@@ -79,7 +117,7 @@ var convertError = ((value, convertValue) => {
     fileName,
     lineNumber
   } = value;
-  const result = createComplexDataStorage();
+  const result = createStorage();
   addToStorage(result, 'name', convertValue(name));
   addToStorage(result, 'message', convertValue(message));
   addToStorage(result, 'columnNumber', convertValue(columnNumber));
@@ -105,7 +143,7 @@ var convertFunction = (value => {
     name = content.substr(content.substr(0, 9) === 'function ' ? 9 : 0, MAX_FUNC_STR_LEN);
   }
 
-  const result = createComplexDataStorage();
+  const result = createStorage();
   addToStorage(result, 'content', content);
   setCustomClassNameTo(result, // FIXME almost every function starts with "function ", remove this from short string
   `${type}(${name})`);
@@ -113,7 +151,7 @@ var convertFunction = (value => {
 });
 
 var convertMap = ((value, convertValue) => {
-  const result = createComplexDataStorage();
+  const result = createStorage();
   value.forEach((item, key) => {
     /*
     Do not use keyNeedsConversion() here, because Map may hold values of
@@ -129,7 +167,7 @@ var convertMap = ((value, convertValue) => {
 var convertNumber = (value => `${value}`);
 
 var convertObject = ((value, convertValue) => {
-  const result = createComplexDataStorage();
+  const result = createStorage();
   Object.keys(value).forEach(key => {
     addToStorage(result, keyNeedsConversion(key) ? convertValue(key) : key, convertValue(value[key]));
   });
@@ -138,8 +176,12 @@ var convertObject = ((value, convertValue) => {
 });
 
 var convertSet = ((value, convertValue) => {
-  const result = [];
-  value.forEach(item => result.push(convertValue(item)));
+  const result = createList(); // remove need in indexes for Set
+
+  let index = 0;
+  value.forEach(item => {
+    addToList(result, index++, convertValue(item));
+  });
   setCustomClassNameTo(result, getClass.getClassName(value));
   return result;
 });

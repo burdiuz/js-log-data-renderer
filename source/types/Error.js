@@ -1,13 +1,13 @@
 import {
   setCustomClassNameTo,
-  createComplexDataStorage,
+  createStorage,
   addToStorage,
 } from '../utils';
 
 export default (value, convertValue) => {
   const { name, message, columnNumber, fileName, lineNumber } = value;
 
-  const result = createComplexDataStorage();
+  const result = createStorage();
 
   addToStorage(result, 'name', convertValue(name));
   addToStorage(result, 'message', convertValue(message));
