@@ -14,33 +14,24 @@ const CLASS_NAME_KEY = 'className';
 const MAX_FUNC_STR_LEN = 30;
 const setCustomClassNameTo = (data, className) => data[CLASS_NAME_KEY] = className;
 const getCustomClassNameFrom = data => data[CLASS_NAME_KEY] || '';
-const getStringWrap = value => {
-  let pre;
-  let post;
-  const name = getCustomClassNameFrom(value);
-
-  if (value instanceof Array) {
-    pre = '[';
-    post = ']';
-  } else {
-    pre = '{';
-    post = '}';
-  }
-
-  pre = `${name}${pre}`;
-  return {
-    pre,
-    post
-  };
-};
 const canPassAsIs = value => typeof value === 'string';
 const validKeyRgx = /^[\w_$][\w\d_$]*$/i;
 const keyNeedsConversion = key => !(canPassAsIs(key) && validKeyRgx.test(key));
 const isNested = value => value && typeof value === 'object';
+const setNestedWraps = (value, pre, post) => {
+  value.pre = pre;
+  value.post = post;
+};
+const setNestedShortContent = (value, short) => {
+  value.short = short;
+};
 const isList = target => isNested(target) && target.type === 'list';
 const createList = () => ({
   type: 'list',
-  values: []
+  values: [],
+  pre: '[',
+  post: ']',
+  short: '...'
 });
 const addToList = ({
   values
@@ -55,7 +46,10 @@ const isStorage = target => isNested(value) && target.type === 'storage';
 const createStorage = () => ({
   type: 'storage',
   keys: [],
-  values: []
+  values: [],
+  pre: '{',
+  post: '}',
+  short: '...'
 });
 const addToStorage = ({
   keys,
@@ -80,10 +74,11 @@ var utils = /*#__PURE__*/Object.freeze({
   MAX_FUNC_STR_LEN: MAX_FUNC_STR_LEN,
   setCustomClassNameTo: setCustomClassNameTo,
   getCustomClassNameFrom: getCustomClassNameFrom,
-  getStringWrap: getStringWrap,
   canPassAsIs: canPassAsIs,
   keyNeedsConversion: keyNeedsConversion,
   isNested: isNested,
+  setNestedWraps: setNestedWraps,
+  setNestedShortContent: setNestedShortContent,
   isList: isList,
   createList: createList,
   addToList: addToList,
@@ -140,13 +135,18 @@ var convertFunction = (value => {
   } = value;
 
   if (!name) {
-    name = content.substr(content.substr(0, 9) === 'function ' ? 9 : 0, MAX_FUNC_STR_LEN);
+    name = content.replace(/\s+/g, ' ').substr(content.substr(0, 9) === 'function ' ? 9 : 0, MAX_FUNC_STR_LEN);
+
+    if (content.length < MAX_FUNC_STR_LEN) {
+      name = `${name}...`;
+    }
   }
 
   const result = createStorage();
-  addToStorage(result, 'content', content);
-  setCustomClassNameTo(result, // FIXME almost every function starts with "function ", remove this from short string
-  `${type}(${name})`);
+  addToStorage(result, 'code', content);
+  setNestedWraps(result, '(', ')');
+  setNestedShortContent(result, name);
+  setCustomClassNameTo(result, type);
   return result;
 });
 

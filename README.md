@@ -36,3 +36,5 @@ Using GitHub as CDN:
 
 ### TODOs
 1. Add display for HTML nodes/elements(via outerHTML).
+2. Function short content replace newlines with spaces
+3. Function long content replace "content" name to "code"

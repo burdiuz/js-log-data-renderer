@@ -1,7 +1,7 @@
 {
   "name": "@actualwave/log-data-renderer",
   "description": "Convert source data into sets of strings that can be displayed in console for debug.",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "main": "index.js",
   "keywords": [
     "js",

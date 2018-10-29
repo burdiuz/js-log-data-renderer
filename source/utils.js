@@ -8,24 +8,6 @@ export const setCustomClassNameTo = (data, className) =>
 
 export const getCustomClassNameFrom = (data) => data[CLASS_NAME_KEY] || '';
 
-export const getStringWrap = (value) => {
-  let pre;
-  let post;
-  const name = getCustomClassNameFrom(value);
-
-  if (value instanceof Array) {
-    pre = '[';
-    post = ']';
-  } else {
-    pre = '{';
-    post = '}';
-  }
-
-  pre = `${name}${pre}`;
-
-  return { pre, post };
-};
-
 export const canPassAsIs = (value) => typeof value === 'string';
 
 const validKeyRgx = /^[\w_$][\w\d_$]*$/i;
@@ -35,9 +17,24 @@ export const keyNeedsConversion = (key) =>
 
 export const isNested = (value) => value && typeof value === 'object';
 
+export const setNestedWraps = (value, pre, post) => {
+  value.pre = pre;
+  value.post = post;
+};
+
+export const setNestedShortContent = (value, short) => {
+  value.short = short;
+};
+
 export const isList = (target) => isNested(target) && target.type === 'list';
 
-export const createList = () => ({ type: 'list', values: [] });
+export const createList = () => ({
+  type: 'list',
+  values: [],
+  pre: '[',
+  post: ']',
+  short: '...',
+});
 
 export const addToList = ({ values }, index, value) => (values[index] = value);
 
@@ -49,7 +46,14 @@ export const getListSize = ({ values }) => values.length;
 export const isStorage = (target) =>
   isNested(value) && target.type === 'storage';
 
-export const createStorage = () => ({ type: 'storage', keys: [], values: [] });
+export const createStorage = () => ({
+  type: 'storage',
+  keys: [],
+  values: [],
+  pre: '{',
+  post: '}',
+  short: '...',
+});
 
 export const addToStorage = ({ keys, values }, key, value) => {
   keys.push(key);

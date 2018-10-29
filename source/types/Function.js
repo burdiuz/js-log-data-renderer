@@ -5,6 +5,8 @@ import {
   setCustomClassNameTo,
   createStorage,
   addToStorage,
+  setNestedWraps,
+  setNestedShortContent,
 } from '../utils';
 
 export default (value) => {
@@ -19,20 +21,20 @@ export default (value) => {
   let { name } = value;
 
   if (!name) {
-    name = content.substr(
-      content.substr(0, 9) === 'function ' ? 9 : 0,
-      MAX_FUNC_STR_LEN,
-    );
+    name = content
+      .replace(/\s+/g, ' ')
+      .substr(content.substr(0, 9) === 'function ' ? 9 : 0, MAX_FUNC_STR_LEN);
+
+    if (content.length < MAX_FUNC_STR_LEN) {
+      name = `${name}...`;
+    }
   }
 
   const result = createStorage();
-  addToStorage(result, 'content', content);
-
-  setCustomClassNameTo(
-    result,
-    // FIXME almost every function starts with "function ", remove this from short string
-    `${type}(${name})`,
-  );
+  addToStorage(result, 'code', content);
+  setNestedWraps(result, '(', ')');
+  setNestedShortContent(result, name);
+  setCustomClassNameTo(result, type);
 
   return result;
 };
