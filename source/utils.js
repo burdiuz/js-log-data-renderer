@@ -1,12 +1,11 @@
 // Assigned to an object, when rendering, if exists, will wrap content, like
 // Map{...} or Set[...]
-export const CLASS_NAME_KEY = 'className';
 export const MAX_FUNC_STR_LEN = 30;
 
 export const setCustomClassNameTo = (data, className) =>
-  (data[CLASS_NAME_KEY] = className);
+  (data.className = className);
 
-export const getCustomClassNameFrom = (data) => data[CLASS_NAME_KEY] || '';
+export const getCustomClassNameFrom = (data) => data.className || '';
 
 export const canPassAsIs = (value) => typeof value === 'string';
 
@@ -22,9 +21,13 @@ export const setNestedWraps = (value, pre, post) => {
   value.post = post;
 };
 
+export const getNestedWraps = ({ pre, post }) => ({ pre, post });
+
 export const setNestedShortContent = (value, short) => {
   value.short = short;
 };
+
+export const getNestedShortContent = (value) => value.short;
 
 export const isList = (target) => isNested(target) && target.type === 'list';
 
@@ -33,7 +36,6 @@ export const createList = () => ({
   values: [],
   pre: '[',
   post: ']',
-  short: '...',
 });
 
 export const addToList = ({ values }, index, value) => (values[index] = value);
@@ -52,7 +54,6 @@ export const createStorage = () => ({
   values: [],
   pre: '{',
   post: '}',
-  short: '...',
 });
 
 export const addToStorage = ({ keys, values }, key, value) => {

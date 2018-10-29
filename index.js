@@ -10,10 +10,9 @@ var closureValue = require('@actualwave/closure-value');
 
 // Assigned to an object, when rendering, if exists, will wrap content, like
 // Map{...} or Set[...]
-const CLASS_NAME_KEY = 'className';
 const MAX_FUNC_STR_LEN = 30;
-const setCustomClassNameTo = (data, className) => data[CLASS_NAME_KEY] = className;
-const getCustomClassNameFrom = data => data[CLASS_NAME_KEY] || '';
+const setCustomClassNameTo = (data, className) => data.className = className;
+const getCustomClassNameFrom = data => data.className || '';
 const canPassAsIs = value => typeof value === 'string';
 const validKeyRgx = /^[\w_$][\w\d_$]*$/i;
 const keyNeedsConversion = key => !(canPassAsIs(key) && validKeyRgx.test(key));
@@ -22,16 +21,23 @@ const setNestedWraps = (value, pre, post) => {
   value.pre = pre;
   value.post = post;
 };
+const getNestedWraps = ({
+  pre,
+  post
+}) => ({
+  pre,
+  post
+});
 const setNestedShortContent = (value, short) => {
   value.short = short;
 };
+const getNestedShortContent = value => value.short;
 const isList = target => isNested(target) && target.type === 'list';
 const createList = () => ({
   type: 'list',
   values: [],
   pre: '[',
-  post: ']',
-  short: '...'
+  post: ']'
 });
 const addToList = ({
   values
@@ -48,8 +54,7 @@ const createStorage = () => ({
   keys: [],
   values: [],
   pre: '{',
-  post: '}',
-  short: '...'
+  post: '}'
 });
 const addToStorage = ({
   keys,
@@ -70,7 +75,6 @@ const getStorageSize = ({
 }) => keys.length;
 
 var utils = /*#__PURE__*/Object.freeze({
-  CLASS_NAME_KEY: CLASS_NAME_KEY,
   MAX_FUNC_STR_LEN: MAX_FUNC_STR_LEN,
   setCustomClassNameTo: setCustomClassNameTo,
   getCustomClassNameFrom: getCustomClassNameFrom,
@@ -78,7 +82,9 @@ var utils = /*#__PURE__*/Object.freeze({
   keyNeedsConversion: keyNeedsConversion,
   isNested: isNested,
   setNestedWraps: setNestedWraps,
+  getNestedWraps: getNestedWraps,
   setNestedShortContent: setNestedShortContent,
+  getNestedShortContent: getNestedShortContent,
   isList: isList,
   createList: createList,
   addToList: addToList,
