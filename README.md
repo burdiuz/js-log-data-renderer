@@ -1,4 +1,4 @@
-# Log Data Renderer
+# @actualwave/log-data-renderer
 
 Convert incoming data into logging data by creating its stringified representation.
 Currently its used in [DOMConsole](https://github.com/burdiuz/js-dom-console) and [React Native Console](https://github.com/burdiuz/react-native-console) as a data layer.  
