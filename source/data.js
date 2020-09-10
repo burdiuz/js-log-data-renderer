@@ -42,7 +42,11 @@ export const toString = (value) => {
         return convertDate(value);
       }
 
-      return `${value}`;
+      try {
+        return `${value}`;
+      } catch (error) {
+        return '[object Non-Serializable]';
+      }
   }
 };
 

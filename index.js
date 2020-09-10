@@ -2,11 +2,12 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
-
 var getClass = require('@actualwave/get-class');
-var getClass__default = _interopDefault(getClass);
 var closureValue = require('@actualwave/closure-value');
+
+function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+
+var getClass__default = /*#__PURE__*/_interopDefaultLegacy(getClass);
 
 // Assigned to an object, when rendering, if exists, will wrap content, like
 // Map{...} or Set[...]
@@ -75,6 +76,7 @@ const getStorageSize = ({
 }) => keys.length;
 
 var utils = /*#__PURE__*/Object.freeze({
+  __proto__: null,
   MAX_FUNC_STR_LEN: MAX_FUNC_STR_LEN,
   setCustomClassNameTo: setCustomClassNameTo,
   getCustomClassNameFrom: getCustomClassNameFrom,
@@ -216,7 +218,7 @@ const hasTypeHandler = constructor => types.has(constructor);
 const getTypeHandler = constructor => types.get(constructor);
 const removeTypeHandler = constructor => types.delete(constructor);
 const defaultTypeHandlerSelector = value => {
-  const type = getClass__default(value);
+  const type = getClass__default['default'](value);
   return type && getTypeHandler(type);
 };
 let typeHandlerSelector = defaultTypeHandlerSelector;
@@ -284,7 +286,12 @@ const toString = value => {
         return convertDate(value);
       }
 
-      return `${value}`;
+      try {
+        return `${value}`;
+      } catch (error) {
+        return '[object Non-Serializable]';
+      }
+
   }
 };
 
@@ -294,26 +301,26 @@ const fallbackConversion = (value, convertValue, refs) => {
   }
 
   if (value instanceof Function) {
-    return convertFunction(value, convertValue, refs);
+    return convertFunction(value);
   }
 
   if (value instanceof Error) {
-    return convertError(value, convertValue, refs);
+    return convertError(value, convertValue);
   }
 
   if (value instanceof Map) {
-    return convertMap(value, convertValue, refs);
+    return convertMap(value, convertValue);
   }
 
   if (value instanceof Set) {
-    return convertSet(value, convertValue, refs);
+    return convertSet(value, convertValue);
   }
 
   if (value instanceof Array) {
-    return convertArray(value, convertValue, refs);
+    return convertArray(value, convertValue);
   }
 
-  return convertObject(value, convertValue, refs);
+  return convertObject(value, convertValue);
 };
 
 const convert = (value, level = 1, refs = new Map()) => {
@@ -343,7 +350,7 @@ const convert = (value, level = 1, refs = new Map()) => {
     result = handler(value, nextConvert, refs);
   }
 
-  result = fallbackConversion(value, nextConvert, refs);
+  result = fallbackConversion(value, nextConvert);
 
   if (complex) {
     refs.set(value, result);
@@ -352,16 +359,16 @@ const convert = (value, level = 1, refs = new Map()) => {
   return result;
 };
 
-exports.default = convert;
-exports.utils = utils;
 exports.addTypeHandler = addTypeHandler;
+exports.convert = convert;
+exports.default = convert;
+exports.getMaxNesingDepth = getMaxNesingDepth;
 exports.getTypeHandler = getTypeHandler;
 exports.hasTypeHandler = hasTypeHandler;
-exports.removeTypeHandler = removeTypeHandler;
-exports.setTypeHandlerSelector = setTypeHandlerSelector;
 exports.isString = isString;
-exports.toString = toString;
-exports.convert = convert;
-exports.getMaxNesingDepth = getMaxNesingDepth;
+exports.removeTypeHandler = removeTypeHandler;
 exports.setMaxNesingDepth = setMaxNesingDepth;
+exports.setTypeHandlerSelector = setTypeHandlerSelector;
+exports.toString = toString;
+exports.utils = utils;
 //# sourceMappingURL=index.js.map
