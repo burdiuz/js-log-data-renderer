@@ -11,11 +11,15 @@ export default (value, convertValue) => {
   const result = createStorage();
 
   Object.keys(value).forEach((key) => {
-    addToStorage(
-      result,
-      keyNeedsConversion(key) ? convertValue(key) : key,
-      convertValue(value[key]),
-    );
+    try {
+      addToStorage(
+        result,
+        keyNeedsConversion(key) ? convertValue(key) : key,
+        convertValue(value[key]),
+      );
+    } catch (error) {
+      /* Possible SecurityError when accessing properties from restricted origin */
+    }
   });
 
   setCustomClassNameTo(result, getClassName(value));
