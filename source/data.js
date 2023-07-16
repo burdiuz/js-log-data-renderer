@@ -97,13 +97,9 @@ export const convert = (value, level = 1, refs = new Map()) => {
 
   const handler = selectTypeHandler(value);
   const nextConvert = (propValue) => convert(propValue, level + 1, refs);
-  let result;
-
-  if (handler) {
-    result = handler(value, nextConvert, refs);
-  }
-
-  result = fallbackConversion(value, nextConvert, refs);
+  const result = handler
+    ? handler(value, nextConvert, refs)
+    : fallbackConversion(value, nextConvert, refs);
 
   if (complex) {
     refs.set(value, result);

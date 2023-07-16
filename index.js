@@ -5,10 +5,6 @@ Object.defineProperty(exports, '__esModule', { value: true });
 var getClass = require('@actualwave/get-class');
 var closureValue = require('@actualwave/closure-value');
 
-function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
-
-var getClass__default = /*#__PURE__*/_interopDefaultLegacy(getClass);
-
 // Assigned to an object, when rendering, if exists, will wrap content, like
 // Map{...} or Set[...]
 const MAX_FUNC_STR_LEN = 30;
@@ -78,25 +74,25 @@ const getStorageSize = ({
 var utils = /*#__PURE__*/Object.freeze({
   __proto__: null,
   MAX_FUNC_STR_LEN: MAX_FUNC_STR_LEN,
-  setCustomClassNameTo: setCustomClassNameTo,
-  getCustomClassNameFrom: getCustomClassNameFrom,
-  canPassAsIs: canPassAsIs,
-  keyNeedsConversion: keyNeedsConversion,
-  isNested: isNested,
-  setNestedWraps: setNestedWraps,
-  getNestedWraps: getNestedWraps,
-  setNestedShortContent: setNestedShortContent,
-  getNestedShortContent: getNestedShortContent,
-  isList: isList,
-  createList: createList,
   addToList: addToList,
-  iterateList: iterateList,
-  getListSize: getListSize,
-  isStorage: isStorage,
-  createStorage: createStorage,
   addToStorage: addToStorage,
+  canPassAsIs: canPassAsIs,
+  createList: createList,
+  createStorage: createStorage,
+  getCustomClassNameFrom: getCustomClassNameFrom,
+  getListSize: getListSize,
+  getNestedShortContent: getNestedShortContent,
+  getNestedWraps: getNestedWraps,
+  getStorageSize: getStorageSize,
+  isList: isList,
+  isNested: isNested,
+  isStorage: isStorage,
+  iterateList: iterateList,
   iterateStorage: iterateStorage,
-  getStorageSize: getStorageSize
+  keyNeedsConversion: keyNeedsConversion,
+  setCustomClassNameTo: setCustomClassNameTo,
+  setNestedShortContent: setNestedShortContent,
+  setNestedWraps: setNestedWraps
 });
 
 var convertArray = ((value, convertValue) => {
@@ -222,7 +218,7 @@ const hasTypeHandler = constructor => types.has(constructor);
 const getTypeHandler = constructor => types.get(constructor);
 const removeTypeHandler = constructor => types.delete(constructor);
 const defaultTypeHandlerSelector = value => {
-  const type = getClass__default['default'](value);
+  const type = getClass(value);
   return type && getTypeHandler(type);
 };
 let typeHandlerSelector = defaultTypeHandlerSelector;
@@ -348,13 +344,7 @@ const convert = (value, level = 1, refs = new Map()) => {
 
   const nextConvert = propValue => convert(propValue, level + 1, refs);
 
-  let result;
-
-  if (handler) {
-    result = handler(value, nextConvert, refs);
-  }
-
-  result = fallbackConversion(value, nextConvert);
+  const result = handler ? handler(value, nextConvert, refs) : fallbackConversion(value, nextConvert);
 
   if (complex) {
     refs.set(value, result);
