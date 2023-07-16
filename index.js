@@ -218,7 +218,7 @@ const hasTypeHandler = constructor => types.has(constructor);
 const getTypeHandler = constructor => types.get(constructor);
 const removeTypeHandler = constructor => types.delete(constructor);
 const defaultTypeHandlerSelector = value => {
-  const type = getClass(value);
+  const type = getClass.getClass(value);
   return type && getTypeHandler(type);
 };
 let typeHandlerSelector = defaultTypeHandlerSelector;

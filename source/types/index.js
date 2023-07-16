@@ -1,4 +1,4 @@
-import getClass from '@actualwave/get-class';
+import { getClass } from '@actualwave/get-class';
 
 import convertArray from './Array';
 import convertBoolean from './Boolean';
