@@ -1,16 +1,14 @@
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
-import babel from 'rollup-plugin-babel';
-//import flow from 'rollup-plugin-flow';
-import json from 'rollup-plugin-json';
-import { terser } from 'rollup-plugin-terser';
+const resolve = require('rollup-plugin-node-resolve');
+const commonjs = require('rollup-plugin-commonjs');
+const babel = require('rollup-plugin-babel');
+const json = require('rollup-plugin-json');
 
-export const DESTINATION_FOLDER = 'dist';
+const DESTINATION_FOLDER = 'dist';
 
-export const LIBRARY_FILE_NAME = 'log-data-renderer';
-export const LIBRARY_VAR_NAME = 'LogDataRenderer';
+const LIBRARY_FILE_NAME = 'log-data-renderer';
+const LIBRARY_VAR_NAME = 'LogDataRenderer';
 
-export const plugins = [
+const plugins = [
   resolve(),
   //flow(),
   babel({
@@ -28,7 +26,7 @@ export const plugins = [
   json(),
 ];
 
-export const cjsConfig = {
+module.exports.cjsConfig = {
   input: 'source/index.js',
   output: [
     {

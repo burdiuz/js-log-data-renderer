@@ -1,3 +1,3 @@
-import { cjsConfig } from './rollup.helpers.js';
+const { cjsConfig } = require('./rollup.helpers.js');
 
-export default [cjsConfig];
+module.exports = [cjsConfig];
