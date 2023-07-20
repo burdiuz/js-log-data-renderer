@@ -1,4 +1,4 @@
-import * as utils from './utils';
+import * as utils from './utils.js';
 
 import {
   addTypeHandler,
@@ -6,11 +6,11 @@ import {
   hasTypeHandler,
   removeTypeHandler,
   setTypeHandlerSelector,
-} from './types';
+} from './types/index.js';
 
-import { isString, toString, convert } from './data';
+import { isString, toString, convert } from './data.js';
 
-import { getMaxNesingDepth, setMaxNesingDepth } from './max-depth';
+import { getMaxNesingDepth, setMaxNesingDepth } from './max-depth.js';
 
 export default convert;
 

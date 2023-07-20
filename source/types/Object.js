@@ -5,7 +5,7 @@ import {
   createStorage,
   addToStorage,
   keyNeedsConversion,
-} from '../utils';
+} from '../utils.js';
 
 export default (value, convertValue) => {
   const result = createStorage();

@@ -1,16 +1,16 @@
 import { getClass } from '@actualwave/get-class';
 
-import convertArray from './Array';
-import convertBoolean from './Boolean';
-import convertDate from './Date';
-import convertError from './Error';
-import convertFunction from './Function';
-import convertMap from './Map';
-import convertNumber from './Number';
-import convertObject from './Object';
-import convertSet from './Set';
-import convertString from './String';
-import convertSymbol from './Symbol';
+import convertArray from './Array.js';
+import convertBoolean from './Boolean.js';
+import convertDate from './Date.js';
+import convertError from './Error.js';
+import convertFunction from './Function.js';
+import convertMap from './Map.js';
+import convertNumber from './Number.js';
+import convertObject from './Object.js';
+import convertSet from './Set.js';
+import convertString from './String.js';
+import convertSymbol from './Symbol.js';
 
 // Every value in JS has .constructor property
 // use Map to store handlers for every type in this case every

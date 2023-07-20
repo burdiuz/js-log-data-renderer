@@ -1,18 +1,18 @@
-import convertArray from './types/Array';
-import convertBoolean from './types/Boolean';
-import convertDate from './types/Date';
-import convertError from './types/Error';
-import convertFunction from './types/Function';
-import convertMap from './types/Map';
-import convertNumber from './types/Number';
-import convertObject from './types/Object';
-import convertSet from './types/Set';
-import convertString from './types/String';
-import convertSymbol from './types/Symbol';
+import convertArray from './types/Array.js';
+import convertBoolean from './types/Boolean.js';
+import convertDate from './types/Date.js';
+import convertError from './types/Error.js';
+import convertFunction from './types/Function.js';
+import convertMap from './types/Map.js';
+import convertNumber from './types/Number.js';
+import convertObject from './types/Object.js';
+import convertSet from './types/Set.js';
+import convertString from './types/String.js';
+import convertSymbol from './types/Symbol.js';
 
-import { getMaxNesingDepth } from './max-depth';
+import { getMaxNesingDepth } from './max-depth.js';
 
-import { selectTypeHandler } from './types';
+import { selectTypeHandler } from './types/index.js';
 
 export const isString = (value) => {
   switch (typeof value) {

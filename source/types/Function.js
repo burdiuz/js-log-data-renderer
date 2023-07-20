@@ -7,7 +7,7 @@ import {
   addToStorage,
   setNestedWraps,
   setNestedShortContent,
-} from '../utils';
+} from '../utils.js';
 
 export default (value) => {
   const content = String(value);
